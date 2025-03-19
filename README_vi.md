@@ -184,3 +184,26 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
    - Thử model nhỏ hơn
    - Chia file lớn thành nhiều phần
    - Đóng các ứng dụng khác 
+
+### Vấn đề CUDA/GPU
+1. Không phát hiện CUDA:
+   ```bash
+   # Cài đặt PyTorch với hỗ trợ CUDA
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   
+   # Cài đặt các thư viện phụ thuộc NVIDIA
+   pip install nvidia-cuda-runtime-cu11 nvidia-cuda-nvrtc-cu11 nvidia-cuda-cupti-cu11 nvidia-cudnn-cu11
+   pip install nvidia-cublas-cu11 nvidia-cufft-cu11 nvidia-curand-cu11 nvidia-cusolver-cu11 nvidia-cusparse-cu11
+   ```
+
+2. Yêu cầu bổ sung:
+   - GPU NVIDIA có hỗ trợ CUDA
+   - Đã cài đặt driver NVIDIA GPU
+   - CUDA Toolkit 11.8 hoặc phiên bản tương thích
+   - Thư viện cuDNN (để có hiệu suất tốt hơn)
+
+3. Lỗi bộ nhớ GPU:
+   - Thử model nhỏ hơn
+   - Giảm sử dụng GPU khác
+   - Chuyển sang CPU nếu cần
+   - Theo dõi sử dụng bộ nhớ GPU với lệnh `nvidia-smi`
