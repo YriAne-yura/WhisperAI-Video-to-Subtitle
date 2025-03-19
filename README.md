@@ -46,7 +46,10 @@ Run Terminal - Video half a minute
     "device": "auto",
     "translate": false,
     "task": "transcribe",
-    "initial_prompt": "This is a Vietnamese video"
+    "initial_prompt": "This is a Vietnamese video",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -60,7 +63,10 @@ Run Terminal - Video half a minute
     "device": "auto",
     "translate": false,
     "task": "transcribe",
-    "initial_prompt": "This is an English video"
+    "initial_prompt": "This is an English video",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -73,7 +79,10 @@ Run Terminal - Video half a minute
     "model": "base",
     "device": "auto",
     "translate": true,
-    "task": "translate"
+    "task": "translate",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -141,11 +150,14 @@ Run Terminal - Video half a minute
    - Set `language` to "en"
    - Add appropriate `initial_prompt`
    - Use `translate: false` and `task: "transcribe"`
+   - Consider adding `max_line_length` in config to control subtitle length
 
 3. Performance:
    - Use GPU if available for faster processing
    - Close unnecessary applications
    - Ensure good audio quality
+   - Split long subtitles into multiple lines (max 80 characters per line)
+   - Keep subtitles on screen for at least 2-3 seconds for readability
 
 ## Troubleshooting
 
@@ -155,36 +167,6 @@ Run Terminal - Video half a minute
    - Add FFmpeg to system PATH
    - Restart terminal/IDE after installation
 
-### CUDA/GPU Issues
-1. CUDA Not Detected:
-   ```bash
-   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-   ```
-2. GPU Memory Error:
-   - Try smaller model
-   - Reduce other GPU usage
-   - Switch to CPU if needed
-
-### Memory Issues
-1. Out of Memory:
-   - Close other applications
-   - Try smaller model
-   - Ensure enough RAM for model
-   - Use CPU for large files
-
-### Common Issues
-1. Poor Recognition Quality:
-   - Use larger model
-   - Add context in `initial_prompt`
-   - Ensure good audio quality
-   - Set correct language
-
-2. Slow Processing:
-   - Use GPU if available
-   - Try smaller model
-   - Split large files
-   - Close other applications
-  
 ### CUDA/GPU Issues
 1. CUDA Not Detected:
    ```bash
@@ -207,3 +189,23 @@ Run Terminal - Video half a minute
    - Reduce other GPU usage
    - Switch to CPU if needed
    - Monitor GPU memory usage with `nvidia-smi`
+
+### Memory Issues
+1. Out of Memory:
+   - Close other applications
+   - Try smaller model
+   - Ensure enough RAM for model
+   - Use CPU for large files
+
+### Common Issues
+1. Poor Recognition Quality:
+   - Use larger model
+   - Add context in `initial_prompt`
+   - Ensure good audio quality
+   - Set correct language
+
+2. Slow Processing:
+   - Use GPU if available
+   - Try smaller model
+   - Split large files
+   - Close other applications 

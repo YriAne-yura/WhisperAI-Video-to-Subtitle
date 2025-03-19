@@ -3,6 +3,7 @@ import json
 import os
 import torch
 import subprocess
+import re
 
 # Cấu hình đường dẫn cố định cho model
 MODEL_DIR = "models"
@@ -13,6 +14,45 @@ MODEL_PATHS = {
     "medium": os.path.join(MODEL_DIR, "medium.pt"),
     "large": os.path.join(MODEL_DIR, "large.pt")
 }
+
+def split_text_by_chars(text, max_chars):
+    """Chia văn bản thành các phần có độ dài ký tự phù hợp."""
+    if len(text) <= max_chars:
+        return [text]
+    
+    # Tìm vị trí cắt phù hợp (sau dấu câu hoặc khoảng trắng)
+    parts = []
+    current_text = text
+    
+    while len(current_text) > max_chars:
+        # Tìm vị trí cắt phù hợp
+        cut_pos = max_chars
+        for i in range(max_chars, 0, -1):
+            if current_text[i] in '.,!?;: ':
+                cut_pos = i + 1
+                break
+        
+        # Nếu không tìm thấy dấu câu, cắt tại max_chars
+        if cut_pos == max_chars:
+            cut_pos = max_chars
+        
+        # Thêm phần đã cắt vào danh sách
+        parts.append(current_text[:cut_pos].strip())
+        current_text = current_text[cut_pos:].strip()
+    
+    if current_text:
+        parts.append(current_text)
+    
+    return parts
+
+def adjust_segment_duration(segment, min_duration, max_duration):
+    """Điều chỉnh thời lượng của segment để phù hợp với giới hạn."""
+    duration = segment["end"] - segment["start"]
+    if duration < min_duration:
+        segment["end"] = segment["start"] + min_duration
+    elif duration > max_duration:
+        segment["end"] = segment["start"] + max_duration
+    return segment
 
 def check_ffmpeg():
     try:
@@ -91,6 +131,10 @@ translate = config.get("translate", False)
 task = config.get("task", "transcribe")
 initial_prompt = config.get("initial_prompt", "")
 
+# Lấy các tùy chọn phụ đề
+subtitle_options = config.get("subtitle_options", {})
+max_chars = subtitle_options.get("max_chars", 80)
+
 # Chọn thiết bị
 selected_device = check_device()
 print(f"✅ Using device: {selected_device}")
@@ -122,14 +166,26 @@ result = model.transcribe(
 # Lưu kết quả ra file với định dạng phù hợp
 if output_format == "srt":
     output_file = "output.srt"
+    subtitle_index = 1
     with open(output_file, "w", encoding="utf-8") as f:
-        for i, segment in enumerate(result["segments"], 1):
+        for segment in result["segments"]:
             start_time = format_timestamp(segment["start"])
             end_time = format_timestamp(segment["end"])
             text = segment["text"].strip()
-            f.write(f"{i}\n")
-            f.write(f"{start_time} --> {end_time}\n")
-            f.write(f"{text}\n\n")
+            
+            # Chia văn bản thành các phần nếu cần
+            if len(text) > max_chars:
+                parts = split_text_by_chars(text, max_chars)
+                for part in parts:
+                    f.write(f"{subtitle_index}\n")
+                    f.write(f"{start_time} --> {end_time}\n")
+                    f.write(f"{part}\n\n")
+                    subtitle_index += 1
+            else:
+                f.write(f"{subtitle_index}\n")
+                f.write(f"{start_time} --> {end_time}\n")
+                f.write(f"{text}\n\n")
+                subtitle_index += 1
 elif output_format == "vtt":
     output_file = "output.vtt"
     with open(output_file, "w", encoding="utf-8") as f:
@@ -138,8 +194,16 @@ elif output_format == "vtt":
             start_time = format_timestamp(segment["start"]).replace(",", ".")
             end_time = format_timestamp(segment["end"]).replace(",", ".")
             text = segment["text"].strip()
-            f.write(f"{start_time} --> {end_time}\n")
-            f.write(f"{text}\n\n")
+            
+            # Chia văn bản thành các phần nếu cần
+            if len(text) > max_chars:
+                parts = split_text_by_chars(text, max_chars)
+                for part in parts:
+                    f.write(f"{start_time} --> {end_time}\n")
+                    f.write(f"{part}\n\n")
+            else:
+                f.write(f"{start_time} --> {end_time}\n")
+                f.write(f"{text}\n\n")
 else:
     output_file = "output.txt"
     with open(output_file, "w", encoding="utf-8") as f:
@@ -147,6 +211,13 @@ else:
             start_time = format_timestamp(segment["start"])
             end_time = format_timestamp(segment["end"])
             text = segment["text"].strip()
-            f.write(f"[{start_time} --> {end_time}] {text}\n")
+            
+            # Chia văn bản thành các phần nếu cần
+            if len(text) > max_chars:
+                parts = split_text_by_chars(text, max_chars)
+                for part in parts:
+                    f.write(f"[{start_time} --> {end_time}] {part}\n")
+            else:
+                f.write(f"[{start_time} --> {end_time}] {text}\n")
 
 print(f"✅ Content has been saved to '{output_file}' 🎉")

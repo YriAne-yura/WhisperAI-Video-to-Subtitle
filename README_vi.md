@@ -46,7 +46,10 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
     "device": "auto",
     "translate": false,
     "task": "transcribe",
-    "initial_prompt": "Đây là video tiếng Việt"
+    "initial_prompt": "Đây là video tiếng Việt",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -60,7 +63,10 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
     "device": "auto",
     "translate": false,
     "task": "transcribe",
-    "initial_prompt": "This is an English video"
+    "initial_prompt": "This is an English video",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -73,7 +79,10 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
     "model": "base",
     "device": "auto",
     "translate": true,
-    "task": "translate"
+    "task": "translate",
+    "subtitle_options": {
+        "max_chars": 80
+    }
 }
 ```
 
@@ -141,11 +150,14 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
    - Đặt `language` thành "en"
    - Thêm `initial_prompt` phù hợp
    - Sử dụng `translate: false` và `task: "transcribe"`
+   - Có thể thêm `max_line_length` trong config để kiểm soát độ dài phụ đề
 
 3. Hiệu suất:
    - Sử dụng GPU nếu có để xử lý nhanh hơn
    - Đóng các ứng dụng không cần thiết
    - Đảm bảo chất lượng âm thanh tốt
+   - Chia phụ đề dài thành nhiều dòng (tối đa 80 ký tự mỗi dòng)
+   - Giữ phụ đề trên màn hình ít nhất 2-3 giây để dễ đọc
 
 ## Xử lý sự cố
 
@@ -154,36 +166,6 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
    - Đảm bảo FFmpeg đã được cài đặt
    - Thêm FFmpeg vào PATH hệ thống
    - Khởi động lại terminal/IDE sau khi cài đặt
-
-### Vấn đề CUDA/GPU
-1. Không phát hiện CUDA:
-   ```bash
-   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
-   ```
-2. Lỗi bộ nhớ GPU:
-   - Thử model nhỏ hơn
-   - Giảm sử dụng GPU khác
-   - Chuyển sang CPU nếu cần
-
-### Vấn đề bộ nhớ
-1. Hết bộ nhớ:
-   - Đóng các ứng dụng khác
-   - Thử model nhỏ hơn
-   - Đảm bảo đủ RAM cho model
-   - Sử dụng CPU cho file lớn
-
-### Vấn đề thường gặp
-1. Chất lượng nhận dạng kém:
-   - Sử dụng model lớn hơn
-   - Thêm ngữ cảnh trong `initial_prompt`
-   - Đảm bảo chất lượng âm thanh tốt
-   - Đặt đúng ngôn ngữ
-
-2. Xử lý chậm:
-   - Sử dụng GPU nếu có
-   - Thử model nhỏ hơn
-   - Chia file lớn thành nhiều phần
-   - Đóng các ứng dụng khác 
 
 ### Vấn đề CUDA/GPU
 1. Không phát hiện CUDA:
@@ -207,3 +189,23 @@ Terminal - Ví dụ khi chuyển đổi video 30 giây
    - Giảm sử dụng GPU khác
    - Chuyển sang CPU nếu cần
    - Theo dõi sử dụng bộ nhớ GPU với lệnh `nvidia-smi`
+
+### Vấn đề bộ nhớ
+1. Hết bộ nhớ:
+   - Đóng các ứng dụng khác
+   - Thử model nhỏ hơn
+   - Đảm bảo đủ RAM cho model
+   - Sử dụng CPU cho file lớn
+
+### Vấn đề thường gặp
+1. Chất lượng nhận dạng kém:
+   - Sử dụng model lớn hơn
+   - Thêm ngữ cảnh trong `initial_prompt`
+   - Đảm bảo chất lượng âm thanh tốt
+   - Đặt đúng ngôn ngữ
+
+2. Xử lý chậm:
+   - Sử dụng GPU nếu có
+   - Thử model nhỏ hơn
+   - Chia file lớn thành nhiều phần
+   - Đóng các ứng dụng khác 
