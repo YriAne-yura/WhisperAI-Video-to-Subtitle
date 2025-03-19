@@ -185,7 +185,6 @@ Run Terminal - Video half a minute
    - Split large files
    - Close other applications
   
-// ... existing code ...
 ### CUDA/GPU Issues
 1. CUDA Not Detected:
    ```bash
