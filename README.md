@@ -183,4 +183,29 @@ Run Terminal - Video half a minute
    - Use GPU if available
    - Try smaller model
    - Split large files
-   - Close other applications 
+   - Close other applications
+  
+// ... existing code ...
+### CUDA/GPU Issues
+1. CUDA Not Detected:
+   ```bash
+   # Install PyTorch with CUDA support
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+   
+   # Install required NVIDIA dependencies
+   pip install nvidia-cuda-runtime-cu11 nvidia-cuda-nvrtc-cu11 nvidia-cuda-cupti-cu11 nvidia-cudnn-cu11
+   pip install nvidia-cublas-cu11 nvidia-cufft-cu11 nvidia-curand-cu11 nvidia-cusolver-cu11 nvidia-cusparse-cu11
+   ```
+
+2. Additional Requirements:
+   - NVIDIA GPU with CUDA support
+   - NVIDIA GPU drivers installed
+   - CUDA Toolkit 11.8 or compatible version
+   - cuDNN library (for better performance)
+
+3. GPU Memory Error:
+   - Try smaller model
+   - Reduce other GPU usage
+   - Switch to CPU if needed
+   - Monitor GPU memory usage with `nvidia-smi`
+// ... existing code ...
