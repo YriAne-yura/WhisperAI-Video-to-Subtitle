@@ -4,6 +4,12 @@ Convert video/audio files to subtitles using OpenAI's Whisper AI.
 
 [Đọc hướng dẫn tiếng Việt](README_vi.md)
 
+## Example
+Run Terminal - Video half a minute
+
+![image](https://github.com/user-attachments/assets/207f927e-9d91-4b51-be94-d116cd47c08b)
+
+
 ## System Requirements
 - Python 3.8 or higher
 - PyTorch
