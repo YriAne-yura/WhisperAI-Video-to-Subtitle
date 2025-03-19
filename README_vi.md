@@ -4,6 +4,12 @@ Chuyển đổi file video/audio thành phụ đề sử dụng OpenAI's Whisper
 
 [Read English guide](README.md)
 
+## Example
+Terminal - Ví dụ khi chuyển đổi video 30 giây
+
+![image](https://github.com/user-attachments/assets/207f927e-9d91-4b51-be94-d116cd47c08b)
+
+
 ## Yêu cầu hệ thống
 - Python 3.8 trở lên
 - PyTorch
