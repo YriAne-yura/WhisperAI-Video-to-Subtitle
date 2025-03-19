@@ -1,0 +1,16 @@
+{
+    "input_file": "video.mp4",
+    "output_format": "srt",
+    "language": "vi",
+    "model": "base",
+    "device": "auto",
+    "device_options": {
+        "auto": "Auto select (GPU priority if available)",
+        "cuda": "Use NVIDIA GPU",
+        "cpu": "Use CPU",
+        "mps": "Use Apple M1/M2 GPU"
+    },
+    "translate": false,
+    "task": "transcribe",
+    "initial_prompt": "Đây là một video tiếng Việt."
+}
